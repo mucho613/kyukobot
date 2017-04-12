@@ -1,33 +1,34 @@
 package main
 
 import (
-        "encoding/json"
-        "fmt"
-        "github.com/ChimeraCoder/anaconda"
-        "github.com/PuerkitoBio/goquery"
-        "io/ioutil"
-        "net/url"
+	"encoding/json"
+	"fmt"
+	"github.com/ChimeraCoder/anaconda"
+	"github.com/PuerkitoBio/goquery"
+	"io/ioutil"
+	"net/url"
 )
 
 type Config struct {
-        ConsumerKey       string `json:"consumerKey"`
-        ConsumerSecret    string `json:"consumerSecret"`
-        AccessToken       string `json:"accessToken"`
-        AccessTokenSecret string `json:"accessTokenSecret"`
-        PageUrl           string `json:"pageUrl"`
+	ConsumerKey       string `json:"consumerKey"`
+	ConsumerSecret    string `json:"consumerSecret"`
+	AccessToken       string `json:"accessToken"`
+	AccessTokenSecret string `json:"accessTokenSecret"`
+	PageUrl           string `json:"pageUrl"`
+	InfoTextSelector  string `json:"infoTextSelector"`
 }
 
 func main() {
 	config := LoadConfig("config.json")
-        anaconda.SetConsumerKey(config.ConsumerKey)
-        anaconda.SetConsumerSecret(config.ConsumerSecret)
-        api := anaconda.NewTwitterApi(config.AccessToken, config.AccessTokenSecret)
+	anaconda.SetConsumerKey(config.ConsumerKey)
+	anaconda.SetConsumerSecret(config.ConsumerSecret)
+	api := anaconda.NewTwitterApi(config.AccessToken, config.AccessTokenSecret)
 
 	var prevInfoText, currentInfoText string
-	prevInfoText = GetInfoText(config.PageUrl)
+	prevInfoText = GetInfoText(config.PageUrl, config.InfoTextSelector)
 
 	for {
-		currentInfoText = GetInfoText(config.PageUrl)
+		currentInfoText = GetInfoText(config.PageUrl, config.InfoTextSelector)
 
 		if prevInfoText != currentInfoText {
 			fmt.Println("Post Tweet : " + currentInfoText)
@@ -49,8 +50,10 @@ func LoadConfig(filePath string) Config {
 	return config
 }
 
-func GetInfoText(url string) string {
+func GetInfoText(url string, selector string) string {
 	fmt.Println("HTTP GET : " + url)
-        doc, _ := goquery.NewDocument(url)
-        return doc.Find("#emergency-info .news-content01").Text()
+	doc, _ := goquery.NewDocument(url)
+	infoText := doc.Find(selector).Text()
+	fmt.Println("Info Text : " + infoText)
+	return infoText
 }

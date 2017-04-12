@@ -3,5 +3,6 @@
 	"consumerSecret" : "",
 	"accessToken" : "",
 	"accessTokenSecret" : "",
-	"pageUrl" : ""
+	"pageUrl" : "",
+    "infoTextSelector" : ""
 }
