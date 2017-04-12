@@ -25,3 +25,4 @@ _testmain.go
 
 # Config Files
 *.json
+!config_template.json
