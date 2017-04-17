@@ -1,8 +1,8 @@
 {
-	"consumerKey" : "",
-	"consumerSecret" : "",
-	"accessToken" : "",
-	"accessTokenSecret" : "",
-	"pageUrl" : "",
-    "infoTextSelector" : ""
+  "consumerKey" : "",
+  "consumerSecret" : "",
+  "accessToken" : "",
+  "accessTokenSecret" : "",
+  "pageUrl" : "",
+  "infoTextSelector" : ""
 }
