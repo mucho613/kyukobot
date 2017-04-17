@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"net/url"
 	"strings"
+	"unicode/utf8"
 )
 
 type Config struct {
@@ -36,7 +37,7 @@ func main() {
 	for {
 		currentInfoText = GetInfoText(config.PageUrl, config.InfoTextSelector)
 
-		if prevInfoText == currentInfoText {
+		if prevInfoText != currentInfoText {
 			generated := GenerateTweetText(config.TweetTemplate, currentInfoText, config.PageUrl)
 			fmt.Println("Post Tweet : " + generated)
 			v := url.Values{}
@@ -44,7 +45,6 @@ func main() {
 			if err != nil {
 				fmt.Println(err)
 			}
-			break
 		}
 
 		prevInfoText = currentInfoText
@@ -60,7 +60,10 @@ func LoadConfig(filePath string) Config {
 
 func GetInfoText(url string, selector string) string {
 	fmt.Println("HTTP GET : " + url)
-	doc, _ := goquery.NewDocument(url)
+	doc, err := goquery.NewDocument(url)
+	if err != nil {
+		fmt.Println(err)
+	}
 	infoText := doc.Find(selector).Text()
 	fmt.Println("Info Text : " + infoText)
 	return infoText
@@ -68,7 +71,27 @@ func GetInfoText(url string, selector string) string {
 
 func GenerateTweetText(template, infoText, pageUrl string) string {
 	var generated string
+	// 両端の whitespace を削り取る
+	infoText = strings.TrimSpace(infoText)
+
 	generated = strings.Replace(template, "{infoText}", infoText, -1)
 	generated = strings.Replace(generated, "{pageUrl}", pageUrl, -1)
+
+	// Twitter の最大投稿可能文字数を超えてたら、infoText の末尾から超過分を削る
+	if utf8.RuneCountInString(generated) > 140 {
+		fmt.Println("文字列が長過ぎるので削ります")
+
+		// 削らなきゃいけない文字数
+		number := utf8.RuneCountInString(generated) - 140
+		shorted := []rune(infoText)
+		shorted = shorted[0 : len(shorted)-number]
+
+		// U+22ef - Midline horizontal ellipsis (⋯)
+		shorted[len(shorted)-1] = rune(0x22ef)
+
+		generated = strings.Replace(template, "{infoText}", string(shorted), -1)
+		generated = strings.Replace(generated, "{pageUrl}", pageUrl, -1)
+	}
+
 	return generated
 }
