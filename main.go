@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"github.com/ChimeraCoder/anaconda"
 	"github.com/PuerkitoBio/goquery"
@@ -19,7 +20,10 @@ type Config struct {
 }
 
 func main() {
-	config := LoadConfig("config.json")
+	configPath := flag.String("c", "config.json", "Config file path")
+	flag.Parse()
+	config := LoadConfig(*configPath)
+
 	anaconda.SetConsumerKey(config.ConsumerKey)
 	anaconda.SetConsumerSecret(config.ConsumerSecret)
 	api := anaconda.NewTwitterApi(config.AccessToken, config.AccessTokenSecret)
