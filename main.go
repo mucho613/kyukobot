@@ -8,6 +8,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"io/ioutil"
 	"net/url"
+	"strings"
 )
 
 type Config struct {
@@ -17,6 +18,7 @@ type Config struct {
 	AccessTokenSecret string `json:"accessTokenSecret"`
 	PageUrl           string `json:"pageUrl"`
 	InfoTextSelector  string `json:"infoTextSelector"`
+	TweetTemplate     string `json:"tweetTemplate"`
 }
 
 func main() {
@@ -34,13 +36,15 @@ func main() {
 	for {
 		currentInfoText = GetInfoText(config.PageUrl, config.InfoTextSelector)
 
-		if prevInfoText != currentInfoText {
-			fmt.Println("Post Tweet : " + currentInfoText)
+		if prevInfoText == currentInfoText {
+			generated := GenerateTweetText(config.TweetTemplate, currentInfoText, config.PageUrl)
+			fmt.Println("Post Tweet : " + generated)
 			v := url.Values{}
-			_, err := api.PostTweet(currentInfoText, v)
+			_, err := api.PostTweet(generated, v)
 			if err != nil {
 				fmt.Println(err)
 			}
+			break
 		}
 
 		prevInfoText = currentInfoText
@@ -60,4 +64,11 @@ func GetInfoText(url string, selector string) string {
 	infoText := doc.Find(selector).Text()
 	fmt.Println("Info Text : " + infoText)
 	return infoText
+}
+
+func GenerateTweetText(template, infoText, pageUrl string) string {
+	var generated string
+	generated = strings.Replace(template, "{infoText}", infoText, -1)
+	generated = strings.Replace(generated, "{pageUrl}", pageUrl, -1)
+	return generated
 }

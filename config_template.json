@@ -4,5 +4,6 @@
   "accessToken" : "",
   "accessTokenSecret" : "",
   "pageUrl" : "",
-  "infoTextSelector" : ""
+  "infoTextSelector" : "",
+  "tweetTemplate" : ""
 }
