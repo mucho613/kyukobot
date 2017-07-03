@@ -23,6 +23,7 @@ type Config struct {
 }
 
 func main() {
+	// "go run main.go -c config_file_name.json" みたいな感じで起動する
 	configPath := flag.String("c", "config.json", "Config file path")
 	flag.Parse()
 	config := LoadConfig(*configPath)
@@ -32,11 +33,15 @@ func main() {
 	api := anaconda.NewTwitterApi(config.AccessToken, config.AccessTokenSecret)
 
 	var prevInfoText, currentInfoText string
+
+	// 最初のスクレイピング。初期状態として保持しておく
 	prevInfoText = GetInfoText(config.PageUrl, config.InfoTextSelector)
 
 	for {
+		// スクレイピング
 		currentInfoText = GetInfoText(config.PageUrl, config.InfoTextSelector)
 
+		// 差分があったら Tweet
 		if prevInfoText != currentInfoText {
 			generated := GenerateTweetText(config.TweetTemplate, currentInfoText, config.PageUrl)
 			fmt.Println("Post Tweet : " + generated)
@@ -86,6 +91,7 @@ func GenerateTweetText(template, infoText, pageUrl string) string {
 		shorted := []rune(infoText)
 		shorted = shorted[0 : len(shorted)-number]
 
+		// 末尾に省略済を示す記号を追加する
 		// U+22ef - Midline horizontal ellipsis (⋯)
 		shorted[len(shorted)-1] = rune(0x22ef)
 
