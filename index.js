@@ -41,7 +41,7 @@ exports.watch = () => {
           }
         })();
         client.post('statuses/update', {status: validTweetText}, (error, tweet) => {
-          if (!error) console.log(`ツイート！:\n${tweet}`);
+          if (!error) console.log(`ツイート！:\n${validTweetText}`);
         });
         db.collection('emergencyInfoText').doc('latest').set({
           text: emergencyInfoText
