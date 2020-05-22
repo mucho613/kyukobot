@@ -1,0 +1,28 @@
+{
+  "name": "kyukobot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "functions-framework --target=watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mucho613/kyukobot.git"
+  },
+  "author": "Daisuke Yamamura",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mucho613/kyukobot/issues"
+  },
+  "homepage": "https://github.com/mucho613/kyukobot#readme",
+  "dependencies": {
+    "@google-cloud/functions-framework": "^1.5.1",
+    "firebase-admin": "^8.12.1",
+    "http": "0.0.1-security",
+    "jsdom": "^16.2.2",
+    "twitter": "^1.7.1",
+    "twitter-text": "^3.1.0"
+  }
+}
