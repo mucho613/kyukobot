@@ -40,15 +40,17 @@ exports.scheduledFunctionCrontab = pubsub.schedule('* * * * *').onRun((context) 
         })();
         client.post('statuses/update', { status: validTweetText }, (error: any, tweet: any) => {
           if (!error) console.log(`監視結果: 差分が検出されたため、ツイートしました。\n${validTweetText}`);
+          db.collection('emergencyInfoText').doc('latest').set({ text: emergencyInfoText })
+            .then(() => console.log("監視結果: ツイートが完了したため、データベースに書き込みました。"))
+            .catch(() => console.error("エラー: データベースへの書き込みに失敗しました。"));
         });
-        db.collection('emergencyInfoText').doc('latest').set({
-          text: emergencyInfoText
-        }).catch(() => console.error("エラー: データベースへの書き込みに失敗しました。"));
       }
       // 差分がない
-      else {
-        console.log("監視結果: 差分はありません。");
-      }
-    }).catch(() => console.error("エラー: データベースからの読み込みに失敗しました。"));
+      else console.log("監視結果: 差分はありません。");
+      return 0;
+    }).catch(() => {
+      console.error("エラー: データベースからの読み込みに失敗しました。")
+      return 0;
+    });
   });
 });
