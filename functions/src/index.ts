@@ -1,4 +1,4 @@
-import { pubsub, config } from 'firebase-functions';
+import { region, config } from 'firebase-functions';
 import { initializeApp, firestore } from 'firebase-admin';
 
 const { JSDOM } = require('jsdom');
@@ -16,7 +16,7 @@ const client = new Twitter({
   access_token_secret: config().twitter.accesstokensecret
 });
 
-exports.scheduledFunctionCrontab = pubsub.schedule('* * * * *').onRun((context) => {
+exports.scheduledFunctionCrontab = region('asia-northeast1').pubsub.schedule('* * * * *').onRun((context) => {
   JSDOM.fromURL(pageUrl).then((dom: any) => {
     const emergencyInfoText = dom.window.document.querySelector(config().parser.infotextselector)
       .textContent.trim();
