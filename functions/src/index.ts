@@ -3,7 +3,7 @@ import { initializeApp, firestore } from 'firebase-admin';
 
 const { JSDOM } = require('jsdom');
 const Twitter = require('twitter');
-const twitterText = require('twitter-text')
+const twitterText = require('twitter-text');
 
 initializeApp();
 const db = firestore();
