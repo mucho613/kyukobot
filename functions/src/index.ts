@@ -37,7 +37,7 @@ exports.scheduledFunctionCrontab = region('asia-northeast1')
     const emergencyInfoText = dom.window.document.querySelector(config().parser.infotextselector)
       .textContent.trim();
 
-    const snapshot = await db.collection('emergencyInfoText').doc('latest').get();
+    const snapshot = await db.collection('emergencyInfoText').doc('latest').get()
 
     const latestText = snapshot.data()?.text;
 
