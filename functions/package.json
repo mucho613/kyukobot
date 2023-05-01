@@ -16,7 +16,7 @@
   "dependencies": {
     "firebase-admin": "^11.5.0",
     "firebase-functions": "^4.3.0",
-    "jsdom": "^16.2.2",
+    "jsdom": "^21.1.2",
     "twitter-api-v2": "^1.14.2",
     "twitter-text": "^3.1.0"
   },
