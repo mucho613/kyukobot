@@ -12,18 +12,16 @@ const db = firestore();
 const pageUrl = config().parser.pageurl;
 
 exports.scheduledFunctionCrontab = region('asia-northeast1')
-  .runWith({ secrets: ["APP_KEY", "APP_KEY_SECRET", "ACCESS_TOKEN", "ACCESS_TOKEN_SECRET"] })
+  .runWith({ secrets: ["SECRETS"] })
   .pubsub
   .schedule('* * * * *')
   .onRun(async () => {
-    const appKey = process.env.APP_KEY;
-    const appSecret = process.env.APP_KEY_SECRET;
-    const accessToken = process.env.ACCESS_TOKEN;
-    const accessSecret = process.env.ACCESS_TOKEN_SECRET;
-
-    if (!appKey || !appSecret || !accessToken || !accessSecret) {
-      return 0;
+    if(!process.env.SECRETS) {
+      console.error("SECRETS が定義されていません");
+      return;
     }
+
+    const [accessToken, accessSecret, appKey, appSecret] = process.env.SECRETS.split("\n");
 
     const twitterClient = new TwitterApi({
       appKey: appKey,
