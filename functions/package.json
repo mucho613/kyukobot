@@ -15,7 +15,7 @@
   "main": "lib/index.js",
   "dependencies": {
     "firebase-admin": "^11.10.1",
-    "firebase-functions": "^4.4.1",
+    "firebase-functions": "^4.5.0",
     "jsdom": "^22.1.0",
     "twitter-api-v2": "^1.15.1",
     "twitter-text": "^3.1.0"
